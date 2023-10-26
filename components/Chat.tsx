@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Button } from './Button'
 import { type ChatGPTMessage, ChatLine, LoadingChatLine } from './ChatLine'
 import { useCookies } from 'react-cookie'
@@ -49,6 +49,14 @@ export function Chat() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [cookie, setCookie] = useCookies([COOKIE_NAME])
+
+    // Reference to the chat container
+    const chatEndRef = useRef<HTMLDivElement>(null);
+
+    // Function to scroll the chat to the bottom
+    const scrollToBottom = () => {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
 
   useEffect(() => {
     if (!cookie[COOKIE_NAME]) {
@@ -109,6 +117,9 @@ export function Chat() {
         { role: 'assistant', content: lastMessage } as ChatGPTMessage,
       ])
 
+      // Scroll to the bottom after receiving a response from the assistant
+      scrollToBottom()
+
       setLoading(false)
     }
   }
@@ -131,6 +142,10 @@ export function Chat() {
         setInput={setInput}
         sendMessage={sendMessage}
       />
+      
+      {/* This is an invisible element at the bottom of the chat. 
+           When we call scrollToBottom(), we're scrolling to this element. */}
+      <div ref={chatEndRef} />
     </div>
   )
 }

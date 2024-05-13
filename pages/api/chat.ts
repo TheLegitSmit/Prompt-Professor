@@ -42,7 +42,7 @@ Note: Do not begin until the user responds to your first question with "Yes" or 
   messages.push(...body?.messages)
 
   const payload: OpenAIStreamPayload = {
-    model: 'gpt-4',
+    model: 'gpt-4o',
     messages: messages,
     temperature: 0.7,
     max_tokens: 300,
